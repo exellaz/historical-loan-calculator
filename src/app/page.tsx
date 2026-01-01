@@ -6,10 +6,10 @@ export default async function Home() {
 
   const testScenario = calculateLoanScenario({
     amount: 10000,
-    rate: 10.0,
+    rate: 10,
     feeType: 'flat',
-    feeValue: 0,
-    feeTreatment: 'upfront',
+    feeValue: 1000,
+    feeTreatment: 'financed',
     bnmAdjustment: false
   });
 

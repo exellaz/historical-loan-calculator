@@ -36,13 +36,17 @@ export function calculateLoanScenario(input: LoanInput): LoanResult {
 
   const termMonths = 12; // Fixed 12 months term
   const monthlyPayment = calculatePMT(principal, effectiveRate, termMonths);
-  const totalRepayment = monthlyPayment * termMonths;
+  const totalLoanRepayment = monthlyPayment * termMonths;
+
+  const totalCost = feeTreatment === 'upfront'
+    ? totalLoanRepayment + feeAmount
+    : totalLoanRepayment;
 
   return {
     monthlyPayment,
     principal,
-    totalInterest: totalRepayment - principal,
-    totalCost: totalRepayment,
+    totalInterest: totalLoanRepayment - principal,
+    totalCost,
     effectiveRate
   };
 }
