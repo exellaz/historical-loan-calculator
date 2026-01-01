@@ -6,6 +6,7 @@ import { calculateLoanScenario } from "@/lib/calculations";
 import { LoanControls } from "@/components/LoanControls";
 import { ResultsTable } from "@/components/ResultsTable";
 import { useDebounce } from "@/hooks/use-debounce";
+import { CostChart } from "@/components/CostChart";
 
 // Extend the result type to include the year for the table
 type YearResult = LoanResult & { year: number; originalRate: number };
@@ -43,7 +44,6 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
   // Helper to update state cleanly
   const handleParamChange = (updates: Partial<LoanInput>) => {
     setParams((prev) => ({ ...prev, ...updates }));
-    console.log("Applying updates:", updates);
   };
 
   return (
@@ -51,9 +51,9 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
       {/* Controls */}
       <LoanControls values={params} onChange={handleParamChange} />
 
-      {/* TODO: Add charts for visualization */}
-      <div className="p-4 border border-dashed rounded bg-slate-50 text-center text-slate-500">
-        Chart will go here
+      {/* Cost Chart */}
+      <div className={isCalculating ? "opacity-50 transition-opacity" : "transition-opacity"}>
+        <CostChart data={results} />
       </div>
 
       {/* Results Table */}
