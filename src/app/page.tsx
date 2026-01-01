@@ -1,31 +1,20 @@
 import { getInterestRates } from "@/lib/api";
-import { calculateLoanScenario } from "@/lib/calculations";
+import LoanDashboard from "@/components/LoanDashboard";
 
 export default async function Home() {
   const rates = await getInterestRates();
 
-  const testScenario = calculateLoanScenario({
-    amount: 10000,
-    rate: 10,
-    feeType: 'flat',
-    feeValue: 1000,
-    feeTreatment: 'financed',
-    bnmAdjustment: false
-  });
-
   return (
-    <main className="container mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-6">Loan Calculator</h1>
+    <main className="container mx-auto py-10 px-4 max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Malcan Loan Calculator</h1>
+        <p className="text-slate-500 mt-2">
+          Historical lending analysis based on World Bank data (1975-2022).
+        </p>
+      </div>
 
-      {/* Show the fetched interest rates */}
-      <pre className="bg-slate-100 p-4 rounded-md overflow-auto h-64">
-        {JSON.stringify(rates, null, 2)}
-      </pre>
-      {/* Show the test scenario calculation */}
-      <pre className="bg-slate-100 p-4 rounded-md overflow-auto mt-6">
-        {JSON.stringify(testScenario, null, 2)}
-      </pre>
-
+      {/* Pass the server-fetched data to the client component */}
+      <LoanDashboard rates={rates} />
     </main>
   );
 }
