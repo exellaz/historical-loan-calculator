@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
 import { NumberInput } from "@/components/ui/number-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { LoanInput } from "@/lib/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { LoanInput } from "@/lib/types";
 
 interface LoanControlsProps {
   values: Omit<LoanInput, "rate">;

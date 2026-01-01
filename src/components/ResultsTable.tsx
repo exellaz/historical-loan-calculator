@@ -1,5 +1,7 @@
 "use client";
 
+import { memo } from "react";
+import { Loader2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -8,10 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatCurrency, formatRate } from "@/lib/utils";
 import { LoanResult } from "@/lib/types";
-import { memo } from "react";
-import { Loader2 } from "lucide-react";
+import { formatCurrency, formatRate } from "@/lib/utils";
 
 // Combine the calculation result with the year context
 type TableRowData = LoanResult & {

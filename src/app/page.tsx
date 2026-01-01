@@ -7,7 +7,7 @@ export default async function Home() {
   return (
     <main className="container mx-auto py-10 px-4 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Malcan Loan Calculator</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Historical Loan Calculator</h1>
         <p className="text-slate-500 mt-2">
           Historical lending analysis based on World Bank data (1975-2022).
         </p>
