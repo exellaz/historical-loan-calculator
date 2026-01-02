@@ -6,10 +6,13 @@ import { calculateLoanScenario } from "@/lib/calculations";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ConfigurationPanel } from "@/components/ConfigurationPanel";
 import { AnalysisPanel } from "@/components/AnalysisPanel";
+import { X } from "lucide-react";
 
 export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
-  const minDataYear = rates[0].year;
-  const maxDataYear = rates[rates.length - 1].year;
+
+  const hasData = rates && rates.length > 0;
+  const minDataYear = hasData ? rates[0].year : new Date().getFullYear();
+  const maxDataYear = hasData ? rates[rates.length - 1].year : new Date().getFullYear();
 
   // View Mode State
   const [viewMode, setViewMode] = useState<"config" | "analysis">("config");
@@ -44,12 +47,12 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
 
   const effectivePrincipal = useMemo(() => {
     const fee =
-      activeParams.feeType === "percentage"
-        ? activeParams.amount * (activeParams.feeValue / 100)
-        : activeParams.feeValue;
+    activeParams.feeType === "percentage"
+    ? activeParams.amount * (activeParams.feeValue / 100)
+    : activeParams.feeValue;
     return activeParams.feeTreatment === "financed"
-      ? activeParams.amount + fee
-      : activeParams.amount;
+    ? activeParams.amount + fee
+    : activeParams.amount;
   }, [activeParams]);
 
   const results = useMemo(() => {
@@ -80,6 +83,22 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
     return { min, max, avg: sum / results.length };
   }, [results]);
 
+  if (!rates || rates.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] p-8 text-center space-y-4">
+        <div className="bg-slate-100 p-4 rounded-full">
+           <X className="w-8 h-8 text-slate-400" />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-slate-900">No Data Available</h3>
+          <p className="text-slate-500 max-w-sm mx-auto">
+            We couldn&apos;t load the historical interest rates. Please try again later.
+          </p>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="relative min-h-screen bg-slate-50/50">
 
