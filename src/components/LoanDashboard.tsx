@@ -1,20 +1,21 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { LoanControls } from "@/components/LoanControls";
-import { ResultsTable } from "@/components/ResultsTable";
-import { CostChart } from "@/components/CostChart";
-import { Slider } from "@/components/ui/slider";
-import { MetricCard } from "@/components/MetricCard";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useState, useMemo, useCallback } from "react";
 import { HistoricalRate, LoanInput } from "@/lib/types";
 import { calculateLoanScenario } from "@/lib/calculations";
-import { formatRate } from "@/lib/utils";
-import { formatCurrency } from "@/lib/utils";
+import { useDebounce } from "@/hooks/use-debounce";
+import { ConfigurationPanel } from "@/components/ConfigurationPanel";
+import { AnalysisPanel } from "@/components/AnalysisPanel";
 
 export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
-  // User Inputs
-  const [params, setParams] = useState<Omit<LoanInput, "rate">>({
+  const minDataYear = rates[0].year;
+  const maxDataYear = rates[rates.length - 1].year;
+
+  // View Mode State
+  const [viewMode, setViewMode] = useState<"config" | "analysis">("config");
+
+  // Draft State (Mutable): Bound to the Inputs. Updates immediately while typing.
+  const [draftParams, setDraftParams] = useState<Omit<LoanInput, "rate">>({
     amount: 10000,
     feeValue: 0,
     feeType: "flat",
@@ -22,115 +23,90 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
     bnmAdjustment: false,
   });
 
-  const debouncedParams = useDebounce(params, 500);
+  // Active State (Committed): Bound to the Table/Chart. Only updates on "Generate".
+  const [activeParams, setActiveParams] = useState<Omit<LoanInput, "rate">>(draftParams);
 
-  const isCalculating = params !== debouncedParams;
-
-  const minDataYear = rates[0].year;
-  const maxDataYear = rates[rates.length - 1].year;
+  // Slider State
   const [sliderRange, setSliderRange] = useState([minDataYear, maxDataYear]);
-  const debouncedRange = useDebounce(sliderRange, 200);
+  const debouncedRange = useDebounce(sliderRange, 300);
 
-  // Perform calculations for all years when inputs or rates change
+  // Handle typing in the form (Updates Draft Only)
+  const handleDraftChange = useCallback((updates: Partial<LoanInput>) => {
+    setDraftParams((prev) => ({ ...prev, ...updates }));
+  }, []);
+
+  const handleCommitAndVisualize = useCallback(() => {
+    setActiveParams(draftParams);
+    setViewMode("analysis");
+  }, [draftParams]);
+
+  const isCalculating = sliderRange !== debouncedRange;
+
+  const effectivePrincipal = useMemo(() => {
+    const fee =
+      activeParams.feeType === "percentage"
+        ? activeParams.amount * (activeParams.feeValue / 100)
+        : activeParams.feeValue;
+    return activeParams.feeTreatment === "financed"
+      ? activeParams.amount + fee
+      : activeParams.amount;
+  }, [activeParams]);
+
   const results = useMemo(() => {
-    // Filter first
     const filteredRates = rates.filter(
       (r) => r.year >= debouncedRange[0] && r.year <= debouncedRange[1]
     );
 
-    // Then calculate
+    // Calculate using Active Params
     return filteredRates.map((record) => {
       const calculation = calculateLoanScenario({
-         ...debouncedParams,
-         rate: record.rate
+        ...activeParams,
+        rate: record.rate,
       });
-
       return { ...calculation, year: record.year, originalRate: record.rate };
     });
-  }, [rates, debouncedParams, debouncedRange]);
-
-  // Helper to update state cleanly
-  const handleParamChange = (updates: Partial<LoanInput>) => {
-    setParams((prev) => ({ ...prev, ...updates }));
-  };
+  }, [rates, activeParams, debouncedRange]); // Depends on Active
 
   const metrics = useMemo(() => {
     if (results.length === 0) return null;
-
-    // Find Min and Max
     let min = results[0];
     let max = results[0];
     let sum = 0;
-
-    results.forEach(r => {
+    results.forEach((r) => {
       if (r.totalCost < min.totalCost) min = r;
       if (r.totalCost > max.totalCost) max = r;
       sum += r.totalCost;
     });
-
-    return {
-      min,
-      max,
-      avg: sum / results.length
-    };
+    return { min, max, avg: sum / results.length };
   }, [results]);
 
   return (
-    <div className="space-y-8">
-      {/* Controls */}
-      <LoanControls values={params} onChange={handleParamChange} />
+    <div className="relative min-h-screen bg-slate-50/50">
 
-      {/* Cost Chart */}
-      <div className={isCalculating ? "opacity-50 transition-opacity" : "transition-opacity"}>
-        {/* Timeframe Selector */}
-        <div className="bg-white p-6 rounded-lg border shadow-sm space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium text-slate-900">Timeframe Filter</h3>
-            <div className="flex items-center gap-2">
-            {sliderRange !== debouncedRange && (
-              <span className="text-xs text-blue-600 animate-pulse">Syncing...</span>
-            )}
-            </div>
-          </div>
+      {/* View Panel (Receives Active params) */}
+      <AnalysisPanel
+        isVisible={viewMode === "analysis"}
+        params={activeParams} // Uses Committed Data
+        effectivePrincipal={effectivePrincipal}
+        sliderRange={sliderRange}
+        onSliderChange={setSliderRange}
+        minYear={minDataYear}
+        maxYear={maxDataYear}
+        isSyncing={isCalculating}
+        isCalculating={isCalculating}
+        results={results}
+        metrics={metrics}
+        onConfigureClick={() => setViewMode("config")}
+      />
 
-          <Slider
-            defaultValue={[minDataYear, maxDataYear]}
-            min={minDataYear}
-            max={maxDataYear}
-            step={1}
-            value={sliderRange}
-            onValueChange={setSliderRange} // Updates state instantly when dragging
-            className="py-4"
-          />
-          {/* Summary Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <MetricCard
-              label="Lowest Cost"
-              value={formatCurrency(metrics?.min.totalCost || 0)}
-              subtext={`Occurred in ${metrics?.min.year} (${formatRate(metrics?.min.effectiveRate || 0)})`}
-            />
-            <MetricCard
-              label="Average Cost"
-              value={formatCurrency(metrics?.avg || 0)}
-              subtext={`Across selected ${results.length} years`}
-            />
-            <MetricCard
-              label="Highest Cost"
-              value={formatCurrency(metrics?.max.totalCost || 0)}
-              subtext={`Occurred in ${metrics?.max.year} (${formatRate(metrics?.max.effectiveRate || 0)})`}
-            />
-          </div>
-
-          <div className="flex justify-between text-xs text-slate-400 px-1">
-            <span>{minDataYear}</span>
-            <span>{maxDataYear}</span>
-          </div>
-        </div>
-        <CostChart data={results} />
-      </div>
-
-      {/* Results Table */}
-      <ResultsTable data={results} isAdjusted={debouncedParams.bnmAdjustment} isLoading={isCalculating} />
+      {/* Configuration Panel (Receives Draft params) */}
+      <ConfigurationPanel
+        isVisible={viewMode === "config"}
+        params={draftParams} // Uses Mutable Draft Data
+        onParamChange={handleDraftChange}
+        onClose={handleCommitAndVisualize} // Both Closing and Generating now trigger the commit
+        showCloseButton={results.length > 0}
+      />
     </div>
   );
 }

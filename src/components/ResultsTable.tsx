@@ -3,7 +3,6 @@
 import { memo } from "react";
 import { Loader2 } from "lucide-react";
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -44,8 +43,8 @@ const ResultsTableComponent = ({ data, isAdjusted, isLoading }: ResultsTableProp
       )}
       {/* Scrollable Container for the 47-year list */}
       <div className="max-h-150 overflow-auto relative">
-        <Table>
-          <TableHeader className="bg-slate-50 sticky top-0 z-10">
+        <table className="w-full caption-bottom text-sm min-w-150">
+          <TableHeader className="bg-slate-50 sticky top-0 z-20 shadow-sm">
             <TableRow>
               <TableHead>Year</TableHead>
               <TableHead className="text-right">Interest Rate</TableHead>
@@ -98,7 +97,7 @@ const ResultsTableComponent = ({ data, isAdjusted, isLoading }: ResultsTableProp
               </TableRow>
             ))}
           </TableBody>
-        </Table>
+        </table>
       </div>
     </div>
   );
