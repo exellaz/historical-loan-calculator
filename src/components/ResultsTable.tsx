@@ -50,7 +50,6 @@ const ResultsTableComponent = ({ data, isAdjusted, isLoading }: ResultsTableProp
               <TableHead>Year</TableHead>
               <TableHead className="text-right">Interest Rate</TableHead>
               <TableHead className="text-right">Monthly Repayment</TableHead>
-              <TableHead className="text-right">Principal</TableHead>
               <TableHead className="text-right">Total Interest</TableHead>
               <TableHead className="text-right font-bold text-slate-900">
                 Total Cost
@@ -85,11 +84,6 @@ const ResultsTableComponent = ({ data, isAdjusted, isLoading }: ResultsTableProp
                 {/* Monthly Payment */}
                 <TableCell className="text-right font-medium">
                   {formatCurrency(row.monthlyPayment)}
-                </TableCell>
-
-                {/* Principal */}
-                <TableCell className="text-right font-medium text-slate-500">
-                  {formatCurrency(row.principal)}
                 </TableCell>
 
                 {/* Total Interest */}
