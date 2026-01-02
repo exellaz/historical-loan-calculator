@@ -14,37 +14,55 @@ export function NumberInput({
   className,
   ...props
 }: NumberInputProps) {
-  const [displayValue, setDisplayValue] = React.useState(value.toString());
+
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 2, // Allow decimals if needed
+      useGrouping: true,        // Enable commas
+    }).format(num);
+  };
+
+  const [displayValue, setDisplayValue] = React.useState(formatNumber(value));
 
   // Sync with parent changes (e.g., if you reset the form from the parent)
   React.useEffect(() => {
+    const cleanString = displayValue.replace(/,/g, "");
     // Only update if the parent value is significantly different from what we show
     // This prevents the cursor from jumping when you type "1.0"
-    if (Number(displayValue) !== value && displayValue !== value.toString() + ".") {
-      setDisplayValue(value.toString());
+    const numericDisplay = cleanString === "" ? 0 : parseFloat(cleanString);
+    if (numericDisplay !== value) {
+      setDisplayValue(formatNumber(value));
     }
   }, [value, displayValue]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    let inputValue = e.target.value;
 
-    // Regex: Allow digits and a single optional decimal point
-    if (!/^\d*\.?\d*$/.test(inputValue)) return;
+    // Regex: Allow digits, commas and a single optional decimal point
+    if (!/^[\d,]*\.?\d*$/.test(inputValue)) return;
 
-    // UX: Remove leading zero unless it's "0." or just "0"
-    let cleanValue = inputValue;
-    if (cleanValue.length > 1 && cleanValue.startsWith("0") && cleanValue[1] !== ".") {
-      cleanValue = cleanValue.substring(1);
+    if (inputValue.length > 1 && inputValue.startsWith("0") && inputValue[1] !== ".") {
+       inputValue = inputValue.substring(1);
     }
+    setDisplayValue(inputValue);
 
-    setDisplayValue(cleanValue);
-
-    // Pass valid number to parent, or 0 if empty
-    if (cleanValue === "") {
+    const cleanString = inputValue.replace(/,/g, "");
+    if (cleanString === "" || cleanString === ".") {
       onValueChange(0);
     } else {
-      const parsed = parseFloat(cleanValue);
-      if (!isNaN(parsed)) onValueChange(parsed);
+      const parsed = parseFloat(cleanString);
+      if (!isNaN(parsed)) {
+        onValueChange(parsed);
+      }
+    }
+  };
+
+  const handleFocus = () => {
+    const rawValue = displayValue.replace(/,/g, "");
+    if (rawValue === "0") {
+        setDisplayValue("");
+    } else {
+        setDisplayValue(rawValue);
     }
   };
 
@@ -52,6 +70,10 @@ export function NumberInput({
     if (displayValue === "" || displayValue === ".") {
       setDisplayValue("0");
       onValueChange(0);
+    } else {
+      const cleanString = displayValue.replace(/,/g, "");
+      const parsed = parseFloat(cleanString);
+      setDisplayValue(formatNumber(parsed));
     }
   };
 
@@ -62,6 +84,7 @@ export function NumberInput({
       inputMode="decimal"
       value={displayValue}
       onChange={handleChange}
+      onFocus={handleFocus}
       onBlur={handleBlur}
       className={className}
     />
