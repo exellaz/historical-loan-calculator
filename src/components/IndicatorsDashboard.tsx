@@ -163,7 +163,7 @@ export function IndicatorsDashboard({ data }: { data: MacroIndicator[] }) {
           <div>
             <h2 className="text-xl font-bold text-slate-900">Economic Overview</h2>
             <p className="text-sm text-slate-500 mt-1">
-              Key market indicators affecting the cost of borrowing in Malaysia.
+              Key market indicators that are related to lending costs in Malaysia.
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs font-medium text-slate-500">

@@ -93,6 +93,7 @@ export function LoanControls({ values, onChange }: LoanControlsProps) {
             <select
               className="h-10 border rounded px-2 text-sm bg-white"
               value={values.feeType}
+              aria-label="Origination Fee Type"
               onChange={(e) => {
                 const newType = e.target.value as "flat" | "percentage";
                 let newValue = values.feeValue;

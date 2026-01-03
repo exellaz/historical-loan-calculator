@@ -40,6 +40,7 @@ export function ConfigurationPanel({
           {showCloseButton && (
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-5 h-5 text-slate-500" />
+              <span className="sr-only">Close Configuration</span>
             </Button>
           )}
         </div>
