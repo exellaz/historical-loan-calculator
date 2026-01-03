@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Malaysia Historical Loan Calculator
+
+A financial analytics platform that combines macroeconomic trend analysis with a historical loan simulation. This application aggregates real-time economic data from the World Bank API to provide context for personal financing decisions in the Malaysian market.
+
+<div align="center">
+  <p>Real-time trends for GDP, Inflation, and Unemployment.</p>
+  <img src="https://github.com/user-attachments/assets/cf57676b-b35c-4a66-951c-dd24b5d40604" alt="Indicators Dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+
+  <br/><br/>
+
+  <p>Interactive visualizations of loan performance over time.</p>
+  <img src="https://github.com/user-attachments/assets/d498e5ba-b1d7-4f71-85de-e947a61c2a3b" alt="Loan Dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+
+  <br/><br/>
+
+  <p>Control panel for adjusting loan parameters.</p>
+  <img src="https://github.com/user-attachments/assets/4ddeeeb2-7889-4102-91be-30f73eb97bbe" alt="Config Panel" width="100%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+</div>
+
+## Key Features
+
+* **Historical Context:** Simulates loan performance against historical interest rates.
+* **Complex Amortization:** Calculates monthly repayments, total interest, and effective interest rates (EIR).
+* **Real-time Data:** Fetches live economic indicators (GDP, Inflation/CPI, Unemployment, Lending Rates) via the World Bank API.
+* **Trend Visualization:** Interactive area charts showing historical trends.
+* **Export:** One-click CSV export for external analysis.
+
+## Tech Stack
+
+* **Framework:** Next.js 16 (App Router)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS & Shadcn/ui
+* **Visualization:** Recharts
+* **Icons:** Lucide React
+* **Data Source:** World Bank Open Data API
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+* Node.js 24+
+* npm or pnpm
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Installation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/exellaz/historical-loan-calculator.git
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Run the development server:
+    ```bash
+    npm run dev
+    ```
+4.  Open [http://localhost:3000](http://localhost:3000) in your browser.

@@ -53,7 +53,7 @@ export function LoanControls({ values, onChange }: LoanControlsProps) {
           )}
         </div>
         <div className="space-y-2">
-            <Label className="text-slate-700 font-medium">Tenure</Label>
+            <Label className="text-slate-700 font-medium">Amortization Period</Label>
             <div className="flex items-center justify-center h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-2 font-bold text-slate-500 cursor-not-allowed text-center">
                 12 Months
             </div>

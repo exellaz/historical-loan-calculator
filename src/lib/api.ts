@@ -4,11 +4,11 @@ const WB_API_URL = "https://api.worldbank.org/v2/country/MY/indicator/FR.INR.LEN
 
 /**
  * Fetches historical interest rate data from the World Bank API.
- * Normalizes and filters the data to include only valid entries up to 2022.
+ * Normalizes and filters the data to include only valid entries from 1975 up to 2022.
  * @returns An array of HistoricalRate objects.
  */
 export async function getInterestRates(): Promise<HistoricalRate[]> {
-  const res = await fetch(`${WB_API_URL}?format=json&per_page=100`, {
+  const res = await fetch(`${WB_API_URL}?format=json&per_page=100&date=1975:2022`, {
     next: { revalidate: 86400 }, // Cache for 24 hours
   });
 
