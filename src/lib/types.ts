@@ -1,3 +1,5 @@
+export type HistoryItem = { year: number; value: number };
+
 export interface HistoricalRate {
   year: number;
   rate: number;
@@ -35,4 +37,13 @@ export interface LoanResult {
   totalInterest: number;  // Just the interest portion
   totalCost: number;      // Total amount paid over 12 months
   effectiveRate: number;  // The rate actually used (after BNM adjustment)
+}
+
+export interface MacroIndicator {
+  code: string;
+  label: string;
+  currentValue: number;
+  unit: string;
+  history: HistoryItem[];
+  description: string;
 }

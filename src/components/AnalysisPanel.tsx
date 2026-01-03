@@ -75,7 +75,7 @@ export function AnalysisPanel({
             </div>
           </div>
           <div className="flex items-center gap-1 text-xs font-medium text-blue-300">
-            Configure <ChevronRight className="w-3 h-3" />
+            Configure <ChevronRight className="w-4 h-10" />
           </div>
         </div>
       </div>

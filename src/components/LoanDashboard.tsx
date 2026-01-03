@@ -98,7 +98,7 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
       </div>
     );
   }
-  
+
   return (
     <div className="relative min-h-screen bg-slate-50/50">
 
@@ -119,13 +119,15 @@ export default function LoanDashboard({ rates }: { rates: HistoricalRate[] }) {
       />
 
       {/* Configuration Panel (Receives Draft params) */}
-      <ConfigurationPanel
-        isVisible={viewMode === "config"}
-        params={draftParams} // Uses Mutable Draft Data
-        onParamChange={handleDraftChange}
-        onClose={handleCommitAndVisualize} // Both Closing and Generating now trigger the commit
-        showCloseButton={results.length > 0}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-50">
+        <ConfigurationPanel
+          isVisible={viewMode === "config"}
+          params={draftParams} // Uses Mutable Draft Data
+          onParamChange={handleDraftChange}
+          onClose={handleCommitAndVisualize} // Both Closing and Generating now trigger the commit
+          showCloseButton={results.length > 0}
+        />
+      </div>
     </div>
   );
 }

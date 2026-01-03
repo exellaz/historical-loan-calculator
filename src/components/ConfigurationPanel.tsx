@@ -3,7 +3,7 @@
 import { LoanInput } from "@/lib/types";
 import { LoanControls } from "./LoanControls";
 import { Button } from "@/components/ui/button";
-import { X, Check } from "lucide-react";
+import { X, Calculator } from "lucide-react";
 
 interface ConfigurationPanelProps {
   isVisible: boolean;
@@ -23,19 +23,18 @@ export function ConfigurationPanel({
   return (
     <div
       className={`
-        fixed inset-0 z-50 bg-white overflow-y-auto
+        absolute inset-0 z-50 bg-white overflow-y-auto
         transition-transform duration-500 ease-in-out
         ${isVisible ? "translate-y-0" : "translate-y-full"}
+        pointer-events-auto
       `}
     >
-      <div className="max-w-2xl mx-auto min-h-screen flex flex-col">
+      <div className="mx-auto flex flex-col">
         {/* Header */}
         <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center z-10">
           <div>
             <h2 className="text-xl font-bold text-slate-900">Configure Loan</h2>
-            <p className="text-xs text-slate-500">
-              Adjust parameters and timeframe
-            </p>
+            <p className="text-sm text-slate-500">Set your loan parameters</p>
           </div>
           {/* Close button */}
           {showCloseButton && (
@@ -57,8 +56,8 @@ export function ConfigurationPanel({
             className="w-full text-base font-bold h-12 bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-900/20"
             onClick={onClose}
           >
-            <Check className="w-5 h-5 mr-2" />
-            Generate Analysis
+            <Calculator className="w-5 h-5 mr-2" />
+            Calculate
           </Button>
         </div>
       </div>
