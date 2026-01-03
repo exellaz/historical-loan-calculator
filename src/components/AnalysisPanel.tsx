@@ -6,7 +6,9 @@ import { ResultsTable } from "./ResultsTable";
 import { MetricCard } from "@/components/MetricCard";
 import { Slider } from "@/components/ui/slider";
 import { formatCurrency } from "@/lib/utils";
-import { Edit3, ChevronRight } from "lucide-react";
+import { Edit3, ChevronRight, Download } from "lucide-react";
+import { downloadLoanCSV } from "@/lib/csv-export";
+import { Button } from "./ui/button";
 
 interface AnalysisPanelProps {
   isVisible: boolean;
@@ -41,6 +43,11 @@ export function AnalysisPanel({
   metrics,
   onConfigureClick,
 }: AnalysisPanelProps) {
+  const handleExport = () => {
+    const filename = `loan-scenario-${params.amount}.csv`;
+    downloadLoanCSV(results, filename);
+  };
+
   return (
     <div
       className={`transition-opacity duration-300 ${
@@ -128,19 +135,25 @@ export function AnalysisPanel({
         </div>
 
         {/* Chart Card */}
-        <div
-          className={
-            isCalculating ? "opacity-50 transition-opacity" : "transition-opacity"
-          }
-        >
+        <div className={isCalculating ? "opacity-50 transition-opacity" : "transition-opacity"}>
           <CostChart data={results} />
         </div>
 
         {/* Table Card */}
         <div className="space-y-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            className="h-8 text-xs gap-2 bg-white hover:bg-slate-50"
+          >
+            <Download className="w-3 h-3" />
+            <span>Export CSV</span>
+          </Button>
+
           <ResultsTable
             data={results}
-            isAdjusted={params.bnmAdjustment} // Note: Passed params directly, or pass debounced if needed
+            isAdjusted={params.bnmAdjustment}
             isLoading={isCalculating}
           />
         </div>
