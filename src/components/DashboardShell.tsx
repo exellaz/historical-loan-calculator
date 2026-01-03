@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { HistoricalRate } from "@/lib/types";
 import { MacroIndicator } from "@/lib/types";
-import { IndicatorsDashbaord } from "@/components/IndicatorsDashboard";
+import { IndicatorsDashboard } from "@/components/IndicatorsDashboard";
 import LoanDashboard from "@/components/LoanDashboard";
 
 interface DashboardShellProps {
@@ -53,13 +53,17 @@ export function DashboardShell({ rates, indicators }: DashboardShellProps) {
         </div>
       </div>
 
-      <div className={activeTab === "indicators" ? "block animate-in fade-in slide-in-from-bottom-4 duration-500" : "hidden"}>
-        <IndicatorsDashbaord data={indicators} />
-      </div>
+      {activeTab === "indicators" && (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <IndicatorsDashboard data={indicators} />
+        </div>
+      )}
 
-      <div className={activeTab === "calculator" ? "block animate-in fade-in slide-in-from-bottom-4 duration-500" : "hidden"}>
-        <LoanDashboard rates={rates} />
-      </div>
+      {activeTab === "calculator" && (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <LoanDashboard rates={rates} />
+        </div>
+      )}
 
     </div>
   );

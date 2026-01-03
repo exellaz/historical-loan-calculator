@@ -135,7 +135,7 @@ export function AnalysisPanel({
         </div>
 
         {/* Chart Card */}
-        <div className={isCalculating ? "opacity-50 transition-opacity" : "transition-opacity"}>
+        <div className={isCalculating ? "opacity-50 transition-opacity min-h-100" : "transition-opacity min-h-100"}>
           <CostChart data={results} />
         </div>
 

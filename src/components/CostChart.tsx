@@ -39,7 +39,7 @@ function CostChartComponent({ data }: CostChartProps) {
   const buffer = (maxVal - minVal) * 0.1; // Add 10% padding
 
   return (
-    <div className="h-87.5 w-full p-4 pt-6 border rounded-lg bg-white shadow-sm">
+    <div className="h-87.5 min-h-87.5 w-full p-4 pt-6 border rounded-lg bg-white shadow-sm">
       <div className="mb-4 px-2 flex justify-between items-center">
         <h3 className="text-sm font-medium text-slate-900">
           Historical Total Cost Trend
@@ -56,7 +56,7 @@ function CostChartComponent({ data }: CostChartProps) {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height="85%">
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
 

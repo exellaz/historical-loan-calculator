@@ -65,10 +65,10 @@ function MacroCard({
   const strokeColor = sentiment === "positive" ? "#059669" : "#e11d48"; // Emerald-600 vs Rose-600
 
   return (
-    <div className="bg-white border rounded-xl p-6 shadow-sm flex flex-col h-87.5">
+    <div className="bg-white border rounded-xl p-6 shadow-sm flex flex-col min-h-87.5">
 
       {/* Card Header */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex justify-between items-start mb-6 shrink-0">
         <div>
           <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
             {data.label}
@@ -99,8 +99,8 @@ function MacroCard({
       </div>
 
       {/* Chart */}
-      <div className="flex-1 w-full min-h-0 text-xs">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="w-full h-50 min-w-0 text-xs">
+        <ResponsiveContainer width="100%" height={200} minWidth={200}>
           <ComposedChart data={mergedData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id={`color-${data.code}`} x1="0" y1="0" x2="0" y2="1">
@@ -147,7 +147,7 @@ function MacroCard({
   );
 }
 
-export function IndicatorsDashbaord({ data }: { data: MacroIndicator[] }) {
+export function IndicatorsDashboard({ data }: { data: MacroIndicator[] }) {
   if (!data || data.length === 0) return null;
 
   const lendingRateData = data.find(d => d.code === "FR.INR.LEND");
